@@ -29,54 +29,62 @@ jobs:
         REGAL_PASSWORD: ${{ secrets.REGAL_PASSWORD }}
       run: |
         import requests
-        import json
-        import os
 
-        # Token generation
-        token_url = "https://172.16.9.163:30607/auth/realms/regal/protocol/openid-connect/token"
-        token_data = {
-            'grant_type': 'password',
-            'username': os.environ['REGAL_USERNAME'],
-            'password': os.environ['REGAL_PASSWORD'],
-            'client_id': 'regal-gui'
-        }
-        token_headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        url = "https://dummyjson.com/image/350x200/?text=Hello+Psdeter"
 
-        token_response = requests.post(token_url, data=token_data, headers=token_headers, verify=False)
-        
-        if token_response.status_code != 200:
-            print(f"Failed to generate token. Status code: {token_response.status_code}")
-            print(token_response.text)
-            exit(1)
+        payload = {}
+        headers = {}
 
-        bearer_token = token_response.json()['access_token']
-        print("Bearer token generated successfully")
+        response = requests.request("GET", url, headers=headers, data=payload)
 
-        # API call
-        api_url = "https://172.16.9.163:30607/api/regalController/projects/dataTable"
-        
-        payload = json.dumps({
-          "filterMap": {},
-          "sortMap": {
-            "project": "asc"
-          },
-          "page": 1,
-          "size": 25
-        })
-        
-        headers = {
-          'Content-Type': 'application/json',
-          'Authorization': f'Bearer {bearer_token}'
-        }
-
-        response = requests.post(api_url, headers=headers, data=payload, verify=False)
-
-        print(f"API call status code: {response.status_code}")
-        print("API response:")
         print(response.text)
 
-        if response.status_code != 200:
-          exit(1)
+
+        # # Token generation
+        # token_url = "https://172.16.9.163:30607/auth/realms/regal/protocol/openid-connect/token"
+        # token_data = {
+        #     'grant_type': 'password',
+        #     'username': os.environ['REGAL_USERNAME'],
+        #     'password': os.environ['REGAL_PASSWORD'],
+        #     'client_id': 'regal-gui'
+        # }
+        # token_headers = {
+        #     'Content-Type': 'application/x-www-form-urlencoded'
+        # }
+
+        # token_response = requests.post(token_url, data=token_data, headers=token_headers, verify=False)
+        
+        # if token_response.status_code != 200:
+        #     print(f"Failed to generate token. Status code: {token_response.status_code}")
+        #     print(token_response.text)
+        #     exit(1)
+
+        # bearer_token = token_response.json()['access_token']
+        # print("Bearer token generated successfully")
+
+        # API call
+        # api_url = "https://172.16.9.163:30607/api/regalController/projects/dataTable"
+        
+        # payload = json.dumps({
+        #   "filterMap": {},
+        #   "sortMap": {
+        #     "project": "asc"
+        #   },
+        #   "page": 1,
+        #   "size": 25
+        # })
+        
+        # headers = {
+        #   'Content-Type': 'application/json',
+        #   'Authorization': f'Bearer {bearer_token}'
+        # }
+
+        # response = requests.post(api_url, headers=headers, data=payload, verify=False)
+
+        # print(f"API call status code: {response.status_code}")
+        # print("API response:")
+        # print(response.text)
+
+        # if response.status_code != 200:
+        #   exit(1)
       shell: python
