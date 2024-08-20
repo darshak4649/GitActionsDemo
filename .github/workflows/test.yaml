@@ -29,36 +29,30 @@ jobs:
         REGAL_PASSWORD: ${{ secrets.REGAL_PASSWORD }}
       run: |
         import requests
+        import json
+        import os
 
-        url = "https://dummyjson.com/products"
+        # Token generation
+        token_url = "https://172.16.9.163:30607/auth/realms/regal/protocol/openid-connect/token"
+        token_data = {
+            'grant_type': 'password',
+            'username': os.environ['REGAL_USERNAME'],
+            'password': os.environ['REGAL_PASSWORD'],
+            'client_id': 'regal-gui'
+        }
+        token_headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-        payload = {}
-        headers = {}
-
-        response = requests.request("GET", url, headers=headers, data=payload)
-
-        print(response.text)
-        # # Token generation
-        # token_url = "https://172.16.9.163:30607/auth/realms/regal/protocol/openid-connect/token"
-        # token_data = {
-        #     'grant_type': 'password',
-        #     'username': os.environ['REGAL_USERNAME'],
-        #     'password': os.environ['REGAL_PASSWORD'],
-        #     'client_id': 'regal-gui'
-        # }
-        # token_headers = {
-        #     'Content-Type': 'application/x-www-form-urlencoded'
-        # }
-
-        # token_response = requests.post(token_url, data=token_data, headers=token_headers, verify=False)
+        token_response = requests.post(token_url, data=token_data, headers=token_headers, verify=False)
         
-        # if token_response.status_code != 200:
-        #     print(f"Failed to generate token. Status code: {token_response.status_code}")
-        #     print(token_response.text)
-        #     exit(1)
+        if token_response.status_code != 200:
+            print(f"Failed to generate token. Status code: {token_response.status_code}")
+            print(token_response.text)
+            exit(1)
 
-        # bearer_token = token_response.json()['access_token']
-        # print("Bearer token generated successfully")
+        bearer_token = token_response.json()['access_token']
+        print("Bearer token generated successfully")
 
         # API call
         # api_url = "https://172.16.9.163:30607/api/regalController/projects/dataTable"
