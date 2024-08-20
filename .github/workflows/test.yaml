@@ -30,7 +30,7 @@ jobs:
       run: |
         import requests
 
-        url = "https://dummyjson.com/image/350x200/?text=Hello+Psdeter"
+        url = "https://dummyjson.com/products"
 
         payload = {}
         headers = {}
@@ -38,8 +38,6 @@ jobs:
         response = requests.request("GET", url, headers=headers, data=payload)
 
         print(response.text)
-
-
         # # Token generation
         # token_url = "https://172.16.9.163:30607/auth/realms/regal/protocol/openid-connect/token"
         # token_data = {
